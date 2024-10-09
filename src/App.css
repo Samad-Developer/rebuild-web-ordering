@@ -1,0 +1,9 @@
+
+.ant-modal .ant-modal-content {
+  border-radius: 16px;
+  /* border: 10px solid black; */
+}
+
+.ant-modal .ant-modal-close {
+  display: none;
+}
