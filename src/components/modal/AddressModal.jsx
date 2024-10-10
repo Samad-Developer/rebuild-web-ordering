@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Select } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { TruckIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
 import ygen from "../../assets/ygen.png";
 import { getWebOrderAddress } from "../../services/api";
 import { useSelector } from "react-redux";
@@ -10,6 +11,7 @@ const AddressModal = ({ open, onClose }) => {
   const brandName = import.meta.env.VITE_BRANDNAME;
   const baseURL = import.meta.env.VITE_BASE_URL;
   const { logo } = useSelector((state) => state.theme);
+  const [loading, setIsloading] = useState(false);
   const [activeTab, setActiveTab] = useState("delivery");
   const [isFiltering, setIsFiltering] = useState(false);
   const [deliveryPickupData, setDeliveryPickupData] = useState({
@@ -64,7 +66,7 @@ const AddressModal = ({ open, onClose }) => {
         <img
           src={logo ? `${baseURL}${logo}` : ygen}
           alt="Brand Logo"
-          className="mx-auto w-20 h-20 sm:w-24 sm:h-24 object-contain" 
+          className="mx-auto w-20 h-20 sm:w-24 sm:h-24 object-contain"
         />
         <h3 className="text-xl font-semibold mb-2">
           {brandName ? brandName : "Brand Name"}
@@ -72,7 +74,7 @@ const AddressModal = ({ open, onClose }) => {
       </div>
 
       {/* Custom Sliding Tabs */}
-      <div className="relative w-[50%] sm:w-[45%]  max-w-lg mx-auto bg-slate-200 p-1 rounded-full">
+      <div className="relative w-[55%] sm:w-[45%]  max-w-lg mx-auto bg-slate-200 p-1 rounded-full">
         {/* Tabs */}
         <div className="flex justify-center relative">
           <button
@@ -81,7 +83,7 @@ const AddressModal = ({ open, onClose }) => {
             }`}
             onClick={() => setActiveTab("delivery")}
           >
-            Delivery
+            <p className="flex items-center justify-center"><TruckIcon className="w-4 h-4 mr-1"/> Delivery</p>
           </button>
           <button
             className={`py-2 px-1 w-full text-sm font-semibold relative z-10 ${
@@ -89,7 +91,7 @@ const AddressModal = ({ open, onClose }) => {
             }`}
             onClick={() => setActiveTab("pickup")}
           >
-            Pickup
+            <p className="flex items-center justify-center"><ShoppingBagIcon className="w-4 h-4 mr-1"/> Pickup</p>
           </button>
 
           {/* Background sliding indicator */}
@@ -240,7 +242,7 @@ const AddressModal = ({ open, onClose }) => {
         className="mt-3 h-10 w-full text-[16px] rounded-lg bg-[#CF0E08] text-white transition-transform duration-300 ease-in-out transform hover:scale-105 hover:bg-[#be3f3f] focus:outline-none focus:ring-2 focus:ring-[#F3C3C1]"
         onClick={() => console.log("Confirmed")}
       >
-        Confirm
+        {loading ? <LoadingOutlined spin className="text-2xl" /> : "Confirm"}
       </button>
     </Modal>
   );

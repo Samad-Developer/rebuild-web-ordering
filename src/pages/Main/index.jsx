@@ -4,7 +4,7 @@ import AddressModal from "../../components/modal/AddressModal";
 import { getWebOrderingSettings } from "../../services/api";
 import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
 import { setTheme } from "../../redux/settings/themeSlice";
-
+import TopBar from "../../components/others/topBar";
 const MainPage = () => {
   const { banners, topBarText, logo } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
@@ -32,6 +32,7 @@ const MainPage = () => {
 
   return (
     <div className="">
+      <TopBar setIsAddressModalVisible={setIsAddressModalVisible}/>
       <AddressModal open={isAddressModalVisible} />
     </div>
   );
