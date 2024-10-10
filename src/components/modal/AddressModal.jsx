@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Select } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import biryaniWala from "../../assets/biryaniWala.jpeg";
-import { getWebOrderAddress, getWebOrderingSettings } from "../../services/api";
+import ygen from "../../assets/ygen.png";
+import { getWebOrderAddress } from "../../services/api";
+import { useSelector } from "react-redux";
 const { Option } = Select;
 
 const AddressModal = ({ open, onClose }) => {
+  const brandName = import.meta.env.VITE_BRANDNAME;
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const { logo } = useSelector((state) => state.theme);
   const [activeTab, setActiveTab] = useState("delivery");
   const [isFiltering, setIsFiltering] = useState(false);
-
-  const [areas, setAreas] = useState([]);
-  const [branches, setBranches] = useState([]);
-
-  // .....
   const [deliveryPickupData, setDeliveryPickupData] = useState({
     cities: [],
     areas: [],
@@ -23,25 +22,22 @@ const AddressModal = ({ open, onClose }) => {
     AreaId: null,
     BranchId: null,
   });
-  // ......
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const addressResponse = await getWebOrderAddress();
-        const settingsResponse = await getWebOrderingSettings();
         if (addressResponse) {
-          // Set the delivery pickup data
-
           const newData = {
             cities: addressResponse.DataSet.Table,
             areas: addressResponse.DataSet.Table1,
             branches: addressResponse.DataSet.Table2,
           };
-
+          // Set the delivery pickup data
           setDeliveryPickupData(newData);
+        } else {
+          alert("Dont recieve Address response");
         }
-        console.log("now may it work ", deliveryPickupData);
       } catch (error) {
         console.error(error.message);
       }
@@ -49,20 +45,6 @@ const AddressModal = ({ open, onClose }) => {
 
     fetchData();
   }, []);
-
-  const handleCitySelect = async (city) => {
-    setSelectedCity(city);
-    setLoadingAreas(true);
-
-    // Simulate async data fetching
-    setTimeout(() => {
-      if (city) {
-        setAreas(["Area 1", "Area 2", "Area 3"]);
-        setBranches(["Branch 1", "Branch 2", "Branch 3"]);
-      }
-      setLoadingAreas(false);
-    }, 2000);
-  };
 
   return (
     <Modal
@@ -79,16 +61,22 @@ const AddressModal = ({ open, onClose }) => {
     >
       {/* Logo */}
       <div className="text-center mb-2">
-        <img src={biryaniWala} alt="Brand Logo" className="mx-auto w-24 h-24" />
-        <h3 className="text-xl font-bold mb-2">Biryani Wala</h3>
+        <img
+          src={logo ? `${baseURL}${logo}` : ygen}
+          alt="Brand Logo"
+          className="mx-auto w-20 h-20 sm:w-24 sm:h-24 object-contain" 
+        />
+        <h3 className="text-xl font-semibold mb-2">
+          {brandName ? brandName : "Brand Name"}
+        </h3>
       </div>
 
       {/* Custom Sliding Tabs */}
-      <div className="relative w-[60%]  max-w-lg mx-auto bg-slate-200 p-1 rounded-full">
+      <div className="relative w-[50%] sm:w-[45%]  max-w-lg mx-auto bg-slate-200 p-1 rounded-full">
         {/* Tabs */}
         <div className="flex justify-center relative">
           <button
-            className={`py-2 px-2 w-full text-sm font-semibold relative z-10 text-center ${
+            className={`py-2 px-1 w-full text-sm font-semibold relative z-10 text-center ${
               activeTab === "delivery" ? "text-white" : "text-black"
             }`}
             onClick={() => setActiveTab("delivery")}
@@ -96,7 +84,7 @@ const AddressModal = ({ open, onClose }) => {
             Delivery
           </button>
           <button
-            className={`py-2 px-2 w-full text-sm font-semibold relative z-10 ${
+            className={`py-2 px-1 w-full text-sm font-semibold relative z-10 ${
               activeTab === "pickup" ? "text-white" : "text-black"
             }`}
             onClick={() => setActiveTab("pickup")}
@@ -106,7 +94,7 @@ const AddressModal = ({ open, onClose }) => {
 
           {/* Background sliding indicator */}
           <div
-            className={`absolute top-0 left-0 h-full bg-blue-600 transition-transform duration-300 ${
+            className={`absolute top-0 left-0 h-full bg-[#CF0E08] transition-transform duration-300 ${
               activeTab === "delivery" ? "translate-x-0" : "translate-x-full"
             }`}
             style={{ width: "50%", borderRadius: "30px" }}
@@ -118,10 +106,10 @@ const AddressModal = ({ open, onClose }) => {
       <div className="mt-3">
         {activeTab === "delivery" ? (
           <div>
-            <div className="mb-4">
+            <div className="mb-3">
               <Select
                 showSearch
-                placeholder={"Please Select Your City"}
+                placeholder={"Please Select City"}
                 className="w-full h-10"
                 optionFilterProp="children"
                 value={modalData.CityId}
@@ -146,7 +134,7 @@ const AddressModal = ({ open, onClose }) => {
             </div>
 
             {isFiltering ? (
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-center mt-3">
                 <LoadingOutlined spin className="text-2xl" />
               </div>
             ) : (
@@ -159,9 +147,7 @@ const AddressModal = ({ open, onClose }) => {
                     optionFilterProp="children"
                     value={modalData.AreaId}
                     onChange={(e) => {
-                        setModalData({ ...modalData, AreaId: e })
-                        console.log('checking what is e actually ', e)
-                        alert('hai')
+                      setModalData({ ...modalData, AreaId: e });
                     }}
                     filterOption={(input, option) =>
                       option.children
@@ -184,7 +170,7 @@ const AddressModal = ({ open, onClose }) => {
           </div>
         ) : (
           <div>
-            <div className="mb-4">
+            <div className="mb-3">
               <Select
                 showSearch
                 placeholder={"Please Select City"}
@@ -211,7 +197,7 @@ const AddressModal = ({ open, onClose }) => {
               </Select>
             </div>
             {isFiltering ? (
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-center mt-3">
                 <LoadingOutlined spin className="text-2xl" />
               </div>
             ) : (
@@ -225,7 +211,6 @@ const AddressModal = ({ open, onClose }) => {
                     value={modalData.BranchId}
                     onChange={(e) =>
                       setModalData({ ...modalData, BranchId: e })
-                      
                     }
                     filterOption={(input, option) =>
                       option.children
@@ -252,7 +237,7 @@ const AddressModal = ({ open, onClose }) => {
       {/* Full-width confirm button */}
       <button
         type="button"
-        className="mt-3 h-10 w-full text-[16px] rounded-lg bg-blue-600 text-white transition-transform duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        className="mt-3 h-10 w-full text-[16px] rounded-lg bg-[#CF0E08] text-white transition-transform duration-300 ease-in-out transform hover:scale-105 hover:bg-[#be3f3f] focus:outline-none focus:ring-2 focus:ring-[#F3C3C1]"
         onClick={() => console.log("Confirmed")}
       >
         Confirm
