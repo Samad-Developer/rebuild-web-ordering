@@ -7,7 +7,7 @@ import { getWebOrderAddress } from "../../services/api";
 import { useSelector } from "react-redux";
 const { Option } = Select;
 
-const AddressModal = ({ open, onClose }) => {
+const AddressModal = ({ open, setIsAddressModalVisible }) => {
   const brandName = import.meta.env.VITE_BRANDNAME;
   const baseURL = import.meta.env.VITE_BASE_URL;
   const { logo } = useSelector((state) => state.theme);
@@ -25,9 +25,20 @@ const AddressModal = ({ open, onClose }) => {
     BranchId: null,
   });
 
+  // Validation logic
+  const isDeliveryValid =
+    activeTab === "delivery" && modalData.CityId && modalData.AreaId;
+  const isPickupValid =
+    activeTab === "pickup" && modalData.CityId && modalData.BranchId;
+
+  // Disable the confirm button if the validation fails
+  const isConfirmDisabled =
+    activeTab === "delivery" ? !isDeliveryValid : !isPickupValid;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsloading(true);
         const addressResponse = await getWebOrderAddress();
         if (addressResponse) {
           const newData = {
@@ -37,9 +48,14 @@ const AddressModal = ({ open, onClose }) => {
           };
           // Set the delivery pickup data
           setDeliveryPickupData(newData);
+          localStorage.setItem(
+            "branchData",
+            JSON.stringify(addressResponse?.DataSet?.Table2[0])
+          );
         } else {
           alert("Dont recieve Address response");
         }
+        setIsloading(false);
       } catch (error) {
         console.error(error.message);
       }
@@ -63,11 +79,16 @@ const AddressModal = ({ open, onClose }) => {
     >
       {/* Logo */}
       <div className="text-center mb-2">
-        <img
-          src={logo ? `${baseURL}${logo}` : ygen}
-          alt="Brand Logo"
-          className="mx-auto w-20 h-20 sm:w-24 sm:h-24 object-contain"
-        />
+        {loading ? (
+          <LoadingOutlined spin className="text-2xl" />
+        ) : (
+          <img
+            src={logo ? `${baseURL}${logo}` : ygen}
+            alt="Brand Logo"
+            className="mx-auto w-20 h-20 sm:w-24 sm:h-24 object-contain"
+          />
+        )}
+
         <h3 className="text-xl font-semibold mb-2">
           {brandName ? brandName : "Brand Name"}
         </h3>
@@ -83,7 +104,9 @@ const AddressModal = ({ open, onClose }) => {
             }`}
             onClick={() => setActiveTab("delivery")}
           >
-            <p className="flex items-center justify-center"><TruckIcon className="w-4 h-4 mr-1"/> Delivery</p>
+            <p className="flex items-center justify-center text-[12px] sm:text-sm">
+              <TruckIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-1" /> Delivery
+            </p>
           </button>
           <button
             className={`py-2 px-1 w-full text-sm font-semibold relative z-10 ${
@@ -91,7 +114,9 @@ const AddressModal = ({ open, onClose }) => {
             }`}
             onClick={() => setActiveTab("pickup")}
           >
-            <p className="flex items-center justify-center"><ShoppingBagIcon className="w-4 h-4 mr-1"/> Pickup</p>
+            <p className="flex items-center justify-center text-[12px] sm:text-sm">
+              <ShoppingBagIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-1" /> Pickup
+            </p>
           </button>
 
           {/* Background sliding indicator */}
@@ -239,8 +264,13 @@ const AddressModal = ({ open, onClose }) => {
       {/* Full-width confirm button */}
       <button
         type="button"
-        className="mt-3 h-10 w-full text-[16px] rounded-lg bg-[#CF0E08] text-white transition-transform duration-300 ease-in-out transform hover:scale-105 hover:bg-[#be3f3f] focus:outline-none focus:ring-2 focus:ring-[#F3C3C1]"
-        onClick={() => console.log("Confirmed")}
+        className={`mt-3 h-10 w-full text-[16px] rounded-lg bg-[#CF0E08] text-white transition-transform duration-300 ease-in-out transform hover:scale-105 hover:bg-[#be3f3f] focus:outline-none focus:ring-2 focus:ring-[#F3C3C1] ${
+          isConfirmDisabled ? "cursor-not-allowed" : ""
+        }`}
+        disabled={isConfirmDisabled}
+        onClick={() => {
+          setIsAddressModalVisible(false);
+        }}
       >
         {loading ? <LoadingOutlined spin className="text-2xl" /> : "Confirm"}
       </button>
