@@ -83,7 +83,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
           <LoadingOutlined spin className="text-2xl" />
         ) : (
           <img
-            src={logo ? `${baseURL}${logo}` : ygen}
+            src={logo && `${baseURL}${logo}`}
             alt="Brand Logo"
             className="mx-auto w-20 h-20 sm:w-24 sm:h-24 object-contain"
           />

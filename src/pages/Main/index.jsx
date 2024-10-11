@@ -39,7 +39,7 @@ const MainPage = () => {
       <Announcement />
       <TopBar setIsAddressModalVisible={setIsAddressModalVisible} />
       <Banner />
-      <div className="bg-slate-400 w-full p-8"></div>
+      {/* <div className="bg-slate-400 w-full p-8"></div> */}
 
       {loading ? (
         <div className="flex justify-center items-center h-96">

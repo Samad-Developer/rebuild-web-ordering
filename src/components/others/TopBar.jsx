@@ -36,14 +36,16 @@ const TopBar = ({ setIsAddressModalVisible }) => {
             <p>03485497976</p>
           </p>
         </div>
+        {logo && (
+          <div className="absolute left-0 top-0 sm:left-[48%] sm:top-[10%] z-10 bg-white rounded-full overflow-hidden">
+            <img
+              src={`${baseURL}${logo}`}
+              alt=""
+              className="mx-auto w-20 h-20 sm:w-28 sm:h-28 object-contain"
+            />
+          </div>
+        )}
 
-        <div className="absolute left-0 top-0 sm:left-[48%] sm:top-[10%] z-10 bg-white rounded-full overflow-hidden">
-          <img
-            src={logo ? `${baseURL}${logo}` : ygen}
-            alt="Brand Logo"
-            className="mx-auto w-20 h-20 sm:w-28 sm:h-28 object-contain"
-          />
-        </div>
         <div className="flex items-center ml-2 cursor-pointer rounded-full bg-[#EF4444] px-1.5 py-1.5 sm:px-2">
           <Badge count={8} overflowCount={99} offset={[5, -3]}>
             <ShoppingCartIcon className="text-white w-7 sm:w-6 text-[2rem] align-middle" />
