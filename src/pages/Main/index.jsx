@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getWebOrderingSettings } from "../../services/api";
+import { getWebOrderingSettings, getProducts } from "../../services/api";
 import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
 import { setTheme } from "../../redux/settings/themeSlice";
 import { LoadingOutlined } from "@ant-design/icons";
 import { AddressModal, Announcement, TopBar, Banner } from "../../components";
 import loadingVideo from "../../assets/surprisefood (1).webm";
+import {
+  toggleModal,
+  openModal,
+  closeModal,
+} from "../../redux/modal/addressModalSlice";
+
 const MainPage = () => {
   const { banners, topBarText, logo } = useSelector((state) => state.theme);
+  const { activeTab, CityId, AreaId, BranchId } = useSelector(
+    (state) => state.addressModal
+  );
   const dispatch = useDispatch();
   const [isAddressModalVisible, setIsAddressModalVisible] = useState(true);
   const [loading, setIsloading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getSettingsData = async () => {
       try {
         setIsloading(true);
         const settingsResponse = await getWebOrderingSettings();
@@ -31,7 +40,33 @@ const MainPage = () => {
       }
     };
 
-    fetchData();
+    const getProductsData = async () => {
+      try {
+        const response = await getProducts({
+          activeTab,
+          CityId,
+          AreaId,
+          BranchId,
+        });
+        console.log(
+          "todo if branch is close than check error here and open the address modal ",
+          response
+        );
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    getSettingsData();
+    const storedAreaId = localStorage.getItem("areaId");
+    const storedBranchId = localStorage.getItem("branchId");
+    // Check if either storedAreaId or storedBranchId exists
+    if (storedAreaId || storedBranchId) {
+      dispatch(closeModal());
+    } else {
+      dispatch(openModal());
+    }
+    getProductsData();
   }, []);
 
   return (

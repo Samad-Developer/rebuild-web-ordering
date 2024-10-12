@@ -2,17 +2,26 @@ import React, { useState, useEffect } from "react";
 import { Modal, Select } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { TruckIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
-import ygen from "../../assets/ygen.png";
-import { getWebOrderAddress } from "../../services/api";
-import { useSelector } from "react-redux";
+import { getWebOrderAddress, getProducts } from "../../services/api";
+import {
+  openModal,
+  closeModal,
+  setActiveTab,
+  setCityId,
+  setAreaId,
+  setBranchId,
+} from "../../redux/modal/addressModalSlice";
+import { useSelector, useDispatch } from "react-redux";
 const { Option } = Select;
 
 const AddressModal = ({ open, setIsAddressModalVisible }) => {
+  const dispatch = useDispatch();
   const brandName = import.meta.env.VITE_BRANDNAME;
   const baseURL = import.meta.env.VITE_BASE_URL;
   const { logo } = useSelector((state) => state.theme);
+  const { isAddressModalVisible, activeTab, CityId, AreaId, BranchId } =
+    useSelector((state) => state.addressModal);
   const [loading, setIsloading] = useState(false);
-  const [activeTab, setActiveTab] = useState("delivery");
   const [isFiltering, setIsFiltering] = useState(false);
   const [deliveryPickupData, setDeliveryPickupData] = useState({
     cities: [],
@@ -66,8 +75,8 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
 
   return (
     <Modal
-      open={open}
-      //   onCancel={onClose}
+      open={isAddressModalVisible}
+      // onCancel={() => dispatch(closeModal())}
       closable={true}
       footer={null}
       centered
@@ -102,7 +111,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
             className={`py-2 px-1 w-full text-sm font-semibold relative z-10 text-center ${
               activeTab === "delivery" ? "text-white" : "text-black"
             }`}
-            onClick={() => setActiveTab("delivery")}
+            onClick={() => dispatch(setActiveTab("delivery"))} // Set activeTab in Redux
           >
             <p className="flex items-center justify-center text-[12px] sm:text-sm">
               <TruckIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-1" /> Delivery
@@ -112,7 +121,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
             className={`py-2 px-1 w-full text-sm font-semibold relative z-10 ${
               activeTab === "pickup" ? "text-white" : "text-black"
             }`}
-            onClick={() => setActiveTab("pickup")}
+            onClick={() => dispatch(setActiveTab("pickup"))} // Set activeTab in Redux
           >
             <p className="flex items-center justify-center text-[12px] sm:text-sm">
               <ShoppingBagIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-1" /> Pickup
@@ -143,6 +152,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
                 onChange={(e) => {
                   setIsFiltering(true);
                   setModalData({ ...modalData, CityId: e });
+                  dispatch(setCityId(e));
                   setTimeout(() => {
                     setIsFiltering(false);
                   }, 1000);
@@ -174,6 +184,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
                     optionFilterProp="children"
                     value={modalData.AreaId}
                     onChange={(e) => {
+                      dispatch(setAreaId(e));
                       setModalData({ ...modalData, AreaId: e });
                     }}
                     filterOption={(input, option) =>
@@ -207,6 +218,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
                 onChange={(e) => {
                   setIsFiltering(true);
                   setModalData({ ...modalData, CityId: e });
+                  dispatch(setCityId(e));
                   setTimeout(() => {
                     setIsFiltering(false);
                   }, 1000);
@@ -236,9 +248,10 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
                     className="w-full h-10"
                     optionFilterProp="children"
                     value={modalData.BranchId}
-                    onChange={(e) =>
-                      setModalData({ ...modalData, BranchId: e })
-                    }
+                    onChange={(e) => {
+                      dispatch(setBranchId(e));
+                      setModalData({ ...modalData, BranchId: e });
+                    }}
                     filterOption={(input, option) =>
                       option.children
                         .toLowerCase()
@@ -268,8 +281,18 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
           isConfirmDisabled ? "cursor-not-allowed" : ""
         }`}
         disabled={isConfirmDisabled}
-        onClick={() => {
-          setIsAddressModalVisible(false);
+        onClick={async () => {
+          dispatch(closeModal());
+          const response = await getProducts({
+            activeTab,
+            CityId,
+            AreaId,
+            BranchId,
+          });
+          console.log(
+            "todo if branch is close than check error here and open the address modal",
+            response
+          );
         }}
       >
         {loading ? <LoadingOutlined spin className="text-2xl" /> : "Confirm"}

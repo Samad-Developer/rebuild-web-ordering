@@ -10,7 +10,6 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 const Banner = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
   const { banners } = useSelector((state) => state.theme);
-  console.log("checking banners ", banners);
 
   return (
     <div className="w-full">

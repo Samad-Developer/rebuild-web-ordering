@@ -1,14 +1,16 @@
 import React from "react";
 import ygen from "../../assets/ygen.png";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   MapPinIcon,
   PhoneArrowDownLeftIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/solid";
 import { Space, Badge } from "antd";
+import { openModal } from "../../redux/modal/addressModalSlice";
 
 const TopBar = ({ setIsAddressModalVisible }) => {
+  const dispatch = useDispatch();
   const { logo } = useSelector((state) => state.theme);
   const baseURL = import.meta.env.VITE_BASE_URL;
   return (
@@ -21,7 +23,7 @@ const TopBar = ({ setIsAddressModalVisible }) => {
             </div>
             <div
               className="flex flex-col cursor-pointer"
-              onClick={() => setIsAddressModalVisible(true)}
+              onClick={() => dispatch(openModal())}
             >
               <p className="font-bold text-[10px] sm:text-[12px]">
                 Change Location
@@ -46,10 +48,11 @@ const TopBar = ({ setIsAddressModalVisible }) => {
           </div>
         )}
 
-        <div className="flex items-center ml-2 cursor-pointer rounded-full bg-[#EF4444] px-1.5 py-1.5 sm:px-2">
-          <Badge count={8} overflowCount={99} offset={[5, -3]}>
-            <ShoppingCartIcon className="text-white w-7 sm:w-6 text-[2rem] align-middle" />
-          </Badge>
+        <div className="flex relative items-center ml-2 cursor-pointer rounded-full bg-[#EF4444] px-1.5 py-1.5 sm:px-2">
+          <span className="text-white absolute left-7 bottom-6 bg-red-500 rounded-full border border-white px-1.5  text-sm font-bold ">
+            {'8'}
+          </span>
+          <ShoppingCartIcon className="text-white w-7 sm:w-6 text-[2rem] align-middle" />
         </div>
       </div>
     </>
