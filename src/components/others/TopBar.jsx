@@ -1,18 +1,19 @@
 import React from "react";
 import ygen from "../../assets/ygen.png";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  MapPinIcon,
-  PhoneArrowDownLeftIcon,
-  ShoppingCartIcon,
-} from "@heroicons/react/24/solid";
+import { MapPinIcon, PhoneArrowDownLeftIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
 import { Space, Badge } from "antd";
 import { openModal } from "../../redux/modal/addressModalSlice";
 
 const TopBar = ({ setIsAddressModalVisible }) => {
   const dispatch = useDispatch();
   const { logo } = useSelector((state) => state.theme);
+  const { AreaName, BranchName, activeTab } = useSelector((state) => state.addressModal)
   const baseURL = import.meta.env.VITE_BASE_URL;
+  const deliveryPickupData = JSON.parse(localStorage.getItem('deliveryPickupData')) || {};
+  const storedAreaId = localStorage.getItem('areaId');
+  const storedBranchId = localStorage.getItem('branchId');
+
   return (
     <>
       <div className="flex justify-end sm:justify-between px-5 py-3 relative">
@@ -29,7 +30,11 @@ const TopBar = ({ setIsAddressModalVisible }) => {
                 Change Location
               </p>
               <p className="font-semibold w-24 text-[8px] sm:text-[9px] overflow-hidden whitespace-nowrap text-ellipsis">
-                Lahore and some other oh wow
+                {
+                activeTab === 'delivery'
+                  ? (AreaName || 'Karachi')
+                  : (BranchName || 'Karachi')
+                }
               </p>
             </div>
           </div>

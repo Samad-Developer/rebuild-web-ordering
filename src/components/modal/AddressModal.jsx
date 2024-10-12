@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Select } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { openModal, closeModal, setActiveTab, setCityId, setAreaId, setBranchId, setAreaName, setBranchName } from "../../redux/modal/addressModalSlice";
+import { setProductsData, setProductsLoading } from "../../redux/productsData/productsSlice";
 import { TruckIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { getWebOrderAddress, getProducts } from "../../services/api";
-import {
-  openModal,
-  closeModal,
-  setActiveTab,
-  setCityId,
-  setAreaId,
-  setBranchId,
-} from "../../redux/modal/addressModalSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Modal, Select } from "antd";
 const { Option } = Select;
 
 const AddressModal = ({ open, setIsAddressModalVisible }) => {
@@ -19,35 +13,23 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
   const brandName = import.meta.env.VITE_BRANDNAME;
   const baseURL = import.meta.env.VITE_BASE_URL;
   const { logo } = useSelector((state) => state.theme);
-  const { isAddressModalVisible, activeTab, CityId, AreaId, BranchId } =
-    useSelector((state) => state.addressModal);
-  const [loading, setIsloading] = useState(false);
+  const { isAddressModalVisible, activeTab, CityId, AreaId, BranchId } = useSelector((state) => state.addressModal);
+  const [addressLoading, setAddressloading] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
-  const [deliveryPickupData, setDeliveryPickupData] = useState({
-    cities: [],
-    areas: [],
-    branches: [],
-  });
-  const [modalData, setModalData] = useState({
-    CityId: null,
-    AreaId: null,
-    BranchId: null,
-  });
+  const [deliveryPickupData, setDeliveryPickupData] = useState({ cities: [], areas: [], branches: [] });
+  const [modalData, setModalData] = useState({ CityId: null, AreaId: null, BranchId: null });
 
   // Validation logic
-  const isDeliveryValid =
-    activeTab === "delivery" && modalData.CityId && modalData.AreaId;
-  const isPickupValid =
-    activeTab === "pickup" && modalData.CityId && modalData.BranchId;
+  const isDeliveryValid = activeTab === "delivery" && modalData.CityId && modalData.AreaId;
+  const isPickupValid = activeTab === "pickup" && modalData.CityId && modalData.BranchId;
 
   // Disable the confirm button if the validation fails
-  const isConfirmDisabled =
-    activeTab === "delivery" ? !isDeliveryValid : !isPickupValid;
+  const isConfirmDisabled = activeTab === "delivery" ? !isDeliveryValid : !isPickupValid;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsloading(true);
+        setAddressloading(true);
         const addressResponse = await getWebOrderAddress();
         if (addressResponse) {
           const newData = {
@@ -58,13 +40,13 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
           // Set the delivery pickup data
           setDeliveryPickupData(newData);
           localStorage.setItem(
-            "branchData",
-            JSON.stringify(addressResponse?.DataSet?.Table2[0])
+            "deliveryPickupData",
+            JSON.stringify(addressResponse?.DataSet)
           );
         } else {
           alert("Dont recieve Address response");
         }
-        setIsloading(false);
+        setAddressloading(false);
       } catch (error) {
         console.error(error.message);
       }
@@ -88,7 +70,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
     >
       {/* Logo */}
       <div className="text-center mb-2">
-        {loading ? (
+        {addressLoading ? (
           <LoadingOutlined spin className="text-2xl" />
         ) : (
           <img
@@ -186,6 +168,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
                     onChange={(e) => {
                       dispatch(setAreaId(e));
                       setModalData({ ...modalData, AreaId: e });
+
                     }}
                     filterOption={(input, option) =>
                       option.children
@@ -197,7 +180,7 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
                       deliveryPickupData.areas
                         .filter((x) => x.CityId === modalData.CityId)
                         .map((x, i) => (
-                          <Option key={i} value={x.AreaId}>
+                          <Option key={i} value={x.AreaId} >
                             {x.AreaName}
                           </Option>
                         ))}
@@ -283,19 +266,39 @@ const AddressModal = ({ open, setIsAddressModalVisible }) => {
         disabled={isConfirmDisabled}
         onClick={async () => {
           dispatch(closeModal());
+          dispatch(setProductsLoading(true))
           const response = await getProducts({
             activeTab,
             CityId,
             AreaId,
             BranchId,
           });
-          console.log(
-            "todo if branch is close than check error here and open the address modal",
-            response
-          );
+          if(response){
+            dispatch(setProductsLoading(false));
+            dispatch(setProductsData(response?.DataSet))
+          }
+
+          if (modalData.AreaId) {
+            const area = deliveryPickupData.areas.find(area => area.AreaId === modalData.AreaId);
+            if (area) {
+              dispatch(setAreaName(area.AreaName));
+            }
+          }
+          // Check if BranchId is available and dispatch the branch name
+          if (modalData.BranchId) {
+            const branch = deliveryPickupData.branches.find(branch => branch.BranchId === modalData.BranchId);
+            if (branch) {
+              dispatch(setBranchName(branch.BranchName));
+            }
+          }
+
         }}
       >
-        {loading ? <LoadingOutlined spin className="text-2xl" /> : "Confirm"}
+        {addressLoading ? (
+          <LoadingOutlined spin className="text-2xl" />
+        ) : (
+          "Confirm"
+        )}
       </button>
     </Modal>
   );

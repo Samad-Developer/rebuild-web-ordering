@@ -6,6 +6,8 @@ const initialState = {
   CityId: null,
   AreaId: null,
   BranchId: null,
+  AreaName: '',
+  BranchName: '',
 };
 
 const addressModalSlice = createSlice({
@@ -35,6 +37,12 @@ const addressModalSlice = createSlice({
     setBranchId: (state, action) => {
       state.BranchId = action.payload;
     },
+    setAreaName: (state, action) => {
+      state.AreaName = action.payload;
+    },
+    setBranchName: (state, action) => {
+      state.BranchName = action.payload;
+    }
   },
 });
 
@@ -47,6 +55,8 @@ export const {
   setCityId,
   setAreaId,
   setBranchId,
+  setBranchName,
+  setAreaName
 } = addressModalSlice.actions;
 
 // Export reducer

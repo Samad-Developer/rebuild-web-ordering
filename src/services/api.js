@@ -84,7 +84,6 @@ export const getProducts = async ({ activeTab, CityId, AreaId, BranchId }) => {
   }
 
   if (areaIdToUse || branchIdToUse) {
-    console.log("coming to request ");
     try {
       const response = await axios.post(`${API_URL}GetWebOrderAddress`, {
         OperationId: 2,

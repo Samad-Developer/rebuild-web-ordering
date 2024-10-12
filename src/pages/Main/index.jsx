@@ -1,30 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { setProductsData, setProductsLoading } from "../../redux/productsData/productsSlice";
+import { toggleModal, openModal, closeModal } from "../../redux/modal/addressModalSlice";
+import { AddressModal, Announcement, TopBar, Banner } from "../../components";
 import { getWebOrderingSettings, getProducts } from "../../services/api";
 import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
-import { setTheme } from "../../redux/settings/themeSlice";
-import { LoadingOutlined } from "@ant-design/icons";
-import { AddressModal, Announcement, TopBar, Banner } from "../../components";
+import { setTheme } from "../../redux/themeSettings/themeSlice";
 import loadingVideo from "../../assets/surprisefood (1).webm";
-import {
-  toggleModal,
-  openModal,
-  closeModal,
-} from "../../redux/modal/addressModalSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const MainPage = () => {
-  const { banners, topBarText, logo } = useSelector((state) => state.theme);
-  const { activeTab, CityId, AreaId, BranchId } = useSelector(
-    (state) => state.addressModal
-  );
   const dispatch = useDispatch();
+  const { activeTab, CityId, AreaId, BranchId } = useSelector((state) => state.addressModal);
+  const { productsData, productsLoading } = useSelector((state) => state.productsData);
+  const [bannersAndThemeLoading, setBannersAndThemeLoading] = useState(true);
   const [isAddressModalVisible, setIsAddressModalVisible] = useState(true);
-  const [loading, setIsloading] = useState(true);
 
+  console.log('checking products data ', productsData)
   useEffect(() => {
     const getSettingsData = async () => {
       try {
-        setIsloading(true);
+        setBannersAndThemeLoading(true);
         const settingsResponse = await getWebOrderingSettings();
         if (settingsResponse) {
           const themeSettingsObject = getThemeAndSetIntoRedux(
@@ -34,7 +30,7 @@ const MainPage = () => {
         } else {
           alert("dont recieve banner and theme data");
         }
-        setIsloading(false);
+        setBannersAndThemeLoading(false);
       } catch (error) {
         console.error(error.message);
       }
@@ -42,16 +38,14 @@ const MainPage = () => {
 
     const getProductsData = async () => {
       try {
-        const response = await getProducts({
-          activeTab,
-          CityId,
-          AreaId,
-          BranchId,
-        });
-        console.log(
-          "todo if branch is close than check error here and open the address modal ",
-          response
-        );
+        dispatch(setProductsLoading(true))
+        const response = await getProducts({ activeTab, CityId, AreaId, BranchId });
+        if(!response?.DataSet.Table[0]?.Error_Message){
+          dispatch(setProductsData(response?.DataSet.Table[0]?.Error_Message))
+          dispatch(setProductsLoading(false));
+        }else {
+          alert(response?.DataSet.Table[0]?.Error_Message)
+        }
       } catch (error) {
         console.error(error.message);
       }
@@ -74,11 +68,12 @@ const MainPage = () => {
       <Announcement />
       <TopBar setIsAddressModalVisible={setIsAddressModalVisible} />
       <Banner />
-      {/* <div className="bg-slate-400 w-full p-8"></div> */}
+      {productsLoading && (
+        <div className="bg-slate-700 w-full p-6">Loading Products </div>
+      ) }
 
-      {loading ? (
+      {bannersAndThemeLoading ? (
         <div className="flex justify-center items-center h-96">
-          {/* <LoadingOutlined spin className="text-3xl z-50" /> */}
           <video autoPlay loop muted className="w-36 h-36 z-50">
             <source src={loadingVideo} type="video/webm" />
             Your browser does not support the video tag.
@@ -90,6 +85,7 @@ const MainPage = () => {
           setIsAddressModalVisible={setIsAddressModalVisible}
         />
       )}
+
     </div>
   );
 };
