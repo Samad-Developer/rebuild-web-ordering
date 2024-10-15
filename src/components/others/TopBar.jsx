@@ -1,44 +1,47 @@
 import React from "react";
-import ygen from "../../assets/ygen.png";
 import { useSelector, useDispatch } from "react-redux";
-import { MapPinIcon, PhoneArrowDownLeftIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
-import { Space, Badge } from "antd";
+import {
+  MapPinIcon,
+  PhoneArrowDownLeftIcon,
+  ShoppingCartIcon,
+  ShoppingBagIcon,
+} from "@heroicons/react/24/solid";
 import { openModal } from "../../redux/modal/addressModalSlice";
 
-const TopBar = ({ setIsAddressModalVisible }) => {
+const TopBar = () => {
   const dispatch = useDispatch();
   const { logo } = useSelector((state) => state.theme);
-  const { AreaName, BranchName, activeTab } = useSelector((state) => state.addressModal)
+  const { AreaName, BranchName, activeTab } = useSelector(
+    (state) => state.addressModal
+  );
   const baseURL = import.meta.env.VITE_BASE_URL;
-  const deliveryPickupData = JSON.parse(localStorage.getItem('deliveryPickupData')) || {};
-  const storedAreaId = localStorage.getItem('areaId');
-  const storedBranchId = localStorage.getItem('branchId');
+  const deliveryPickupData = JSON.parse(localStorage.getItem("deliveryPickupData")) || {};
+  const storedAreaId = localStorage.getItem("areaId");
+  const storedBranchId = localStorage.getItem("branchId");
 
   return (
     <>
-      <div className="flex justify-end sm:justify-between px-5 py-3 relative">
+      <div className="flex justify-end sm:justify-between px-3 sm:px-5 py-2 sm:py-3 relative">
         <div className="flex gap-1 sm:gap-2">
-          <div className="flex gap-1 text-white bg-red-500 px-2 py-1 sm:px-3 rounded-lg ">
+          <div className="flex gap-1 text-white bg-red-500 px-1  sm:px-3 rounded-full ">
             <div className="flex items-center">
               <MapPinIcon className="w-5 h-5" />
             </div>
             <div
-              className="flex flex-col cursor-pointer"
+              className="inline-flex flex-col justify-center cursor-pointer"
               onClick={() => dispatch(openModal())}
             >
               <p className="font-bold text-[10px] sm:text-[12px]">
                 Change Location
               </p>
               <p className="font-semibold w-24 text-[8px] sm:text-[9px] overflow-hidden whitespace-nowrap text-ellipsis">
-                {
-                activeTab === 'delivery'
-                  ? (AreaName || 'Karachi')
-                  : (BranchName || 'Karachi')
-                }
+                {activeTab === "delivery"
+                  ? AreaName || "Karachi"
+                  : BranchName || "Karachi"}
               </p>
             </div>
           </div>
-          <p className="text-white flex items-center bg-red-500  px-2 py-[9.5px] sm:py-[11px] rounded-lg text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
+          <p className="text-white flex items-center bg-red-500  px-2 sm:px-4 py-[9.5px] sm:py-[11px] rounded-full text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
             <PhoneArrowDownLeftIcon className="h-4 w-4 mr-1" />{" "}
             <p>03485497976</p>
           </p>
@@ -53,11 +56,11 @@ const TopBar = ({ setIsAddressModalVisible }) => {
           </div>
         )}
 
-        <div className="flex relative items-center ml-2 cursor-pointer rounded-full bg-[#EF4444] px-1.5 py-1.5 sm:px-2">
+        <div className="flex relative items-center ml-2 cursor-pointer rounded-full border border-[#d03333] text-red-500 px-1.5 py-1.5 sm:px-2">
           <span className="text-white absolute left-7 bottom-6 bg-red-500 rounded-full border border-white px-1.5  text-sm font-bold ">
-            {'8'}
+            {"8"}
           </span>
-          <ShoppingCartIcon className="text-white w-7 sm:w-6 text-[2rem] align-middle" />
+          <ShoppingBagIcon className="text-red-500 w-7 sm:w-6 text-[2rem] align-middle" />
         </div>
       </div>
     </>

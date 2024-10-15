@@ -7,47 +7,53 @@ import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
 import { setTheme } from "../../redux/themeSettings/themeSlice";
 import loadingVideo from "../../assets/surprisefood (1).webm";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadingOutlined } from "@ant-design/icons";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const MainPage = () => {
   const dispatch = useDispatch();
   const { activeTab, CityId, AreaId, BranchId } = useSelector((state) => state.addressModal);
   const { productsData, productsLoading } = useSelector((state) => state.productsData);
   const [bannersAndThemeLoading, setBannersAndThemeLoading] = useState(true);
-  const [isAddressModalVisible, setIsAddressModalVisible] = useState(true);
 
-  console.log('checking products data ', productsData)
+
   useEffect(() => {
+
     const getSettingsData = async () => {
       try {
         setBannersAndThemeLoading(true);
         const settingsResponse = await getWebOrderingSettings();
         if (settingsResponse) {
-          const themeSettingsObject = getThemeAndSetIntoRedux(
+            const themeSettingsObject = getThemeAndSetIntoRedux(
             settingsResponse?.DataSet
           );
-          dispatch(setTheme(themeSettingsObject));
+            dispatch(setTheme(themeSettingsObject));
         } else {
-          alert("dont recieve banner and theme data");
+            toast.info("dont recieve banner and theme data");
         }
-        setBannersAndThemeLoading(false);
       } catch (error) {
         console.error(error.message);
+      } finally {
+        setBannersAndThemeLoading(false);
       }
     };
 
     const getProductsData = async () => {
       try {
-        dispatch(setProductsLoading(true))
-        const response = await getProducts({ activeTab, CityId, AreaId, BranchId });
-        if(!response?.DataSet.Table[0]?.Error_Message){
-          dispatch(setProductsData(response?.DataSet.Table[0]?.Error_Message))
-          dispatch(setProductsLoading(false));
-        }else {
-          alert(response?.DataSet.Table[0]?.Error_Message)
+          dispatch(setProductsLoading(true));
+          const response = await getProducts({ activeTab, CityId, AreaId, BranchId });
+        if (!response?.DataSet.Table[0]?.Error_Message) {
+          dispatch(setProductsData(response?.DataSet));
+        } else {
+          toast.error(response?.DataSet.Table[0]?.Error_Message);
+          dispatch(openModal());
         }
       } catch (error) {
         console.error(error.message);
+        toast.error("An error occurred while fetching products."); // Notify user of the error
+      } finally {
+        dispatch(setProductsLoading(false)); // Ensure loading state is reset
       }
     };
 
@@ -65,12 +71,14 @@ const MainPage = () => {
 
   return (
     <div className="">
+      <ToastContainer position="top-center" autoClose={3000} />
       <Announcement />
-      <TopBar setIsAddressModalVisible={setIsAddressModalVisible} />
+      <TopBar />
       <Banner />
       {productsLoading && (
         <div className="bg-slate-700 w-full p-6">Loading Products </div>
-      ) }
+      )}
+      <div className="w-full p-10 bg-red-500"></div>
 
       {bannersAndThemeLoading ? (
         <div className="flex justify-center items-center h-96">
@@ -80,12 +88,8 @@ const MainPage = () => {
           </video>
         </div>
       ) : (
-        <AddressModal
-          open={isAddressModalVisible}
-          setIsAddressModalVisible={setIsAddressModalVisible}
-        />
+        <AddressModal />
       )}
-
     </div>
   );
 };
