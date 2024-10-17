@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { setProductsData, setProductsLoading } from "../../redux/productsData/productsSlice";
 import { toggleModal, openModal, closeModal } from "../../redux/modal/addressModalSlice";
-import { AddressModal, Announcement, TopBar, Banner } from "../../components";
+import { AddressModal, Announcement, TopBar, Banner, CategoryCard } from "../../components";
 import { getWebOrderingSettings, getProducts } from "../../services/api";
 import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
 import { setTheme } from "../../redux/themeSettings/themeSlice";
@@ -78,7 +78,7 @@ const MainPage = () => {
       {productsLoading && (
         <div className="bg-slate-700 w-full p-6">Loading Products </div>
       )}
-      <div className="w-full p-10 bg-red-500"></div>
+      <CategoryCard />
 
       {bannersAndThemeLoading ? (
         <div className="flex justify-center items-center h-96">
