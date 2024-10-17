@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   MapPinIcon,
-  PhoneArrowDownLeftIcon,
+  PhoneIcon,
   ShoppingCartIcon,
   ShoppingBagIcon,
 } from "@heroicons/react/24/solid";
@@ -11,38 +11,35 @@ import { openModal } from "../../redux/modal/addressModalSlice";
 const TopBar = () => {
   const dispatch = useDispatch();
   const { logo } = useSelector((state) => state.theme);
-  const { AreaName, BranchName, activeTab } = useSelector(
+  const { activeTab, AreaName, BranchName } = useSelector(
     (state) => state.addressModal
   );
   const baseURL = import.meta.env.VITE_BASE_URL;
-  const deliveryPickupData = JSON.parse(localStorage.getItem("deliveryPickupData")) || {};
-  const storedAreaId = localStorage.getItem("areaId");
-  const storedBranchId = localStorage.getItem("branchId");
 
   return (
     <>
-      <div className="flex justify-end sm:justify-between px-3 sm:px-5 py-2 sm:py-3 relative">
+      <div className="flex justify-end items-center sm:justify-between px-3 sm:px-5 py-2 sm:py-3 relative">
         <div className="flex gap-1 sm:gap-2">
-          <div className="flex gap-1 text-white bg-red-500 px-1  sm:px-3 rounded-full ">
+          <div className="flex h-[38px] sm:h-10 gap-1 text-white bg-red-500 px-1  sm:px-3 rounded-full ">
             <div className="flex items-center">
               <MapPinIcon className="w-5 h-5" />
             </div>
             <div
-              className="inline-flex flex-col justify-center cursor-pointer"
+              className="flex flex-col justify-center cursor-pointer h-auto"
               onClick={() => dispatch(openModal())}
             >
               <p className="font-bold text-[10px] sm:text-[12px]">
-                Change Location
+                {AreaName == "" && BranchName == ""
+                  ? "Select Address"
+                  : "Change Location"}
               </p>
               <p className="font-semibold w-24 text-[8px] sm:text-[9px] overflow-hidden whitespace-nowrap text-ellipsis">
-                {activeTab === "delivery"
-                  ? AreaName || "Karachi"
-                  : BranchName || "Karachi"}
+                {activeTab === "delivery" ? AreaName : BranchName}
               </p>
             </div>
           </div>
-          <p className="text-white flex items-center bg-red-500  px-2 sm:px-4 py-[9.5px] sm:py-[11px] rounded-full text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
-            <PhoneArrowDownLeftIcon className="h-4 w-4 mr-1" />{" "}
+          <p className="text-white flex items-center bg-red-500 h-[38px] sm:h-10 px-2 sm:px-4 py-[9.5px] sm:py-[11px] rounded-full text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
+            <PhoneIcon className="h-4 w-4 mr-1" />{" "}
             <p>03485497976</p>
           </p>
         </div>

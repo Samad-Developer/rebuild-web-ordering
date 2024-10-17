@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { openModal, closeModal, setActiveTab, setCityId, setAreaId, setBranchId, setAreaName, setBranchName } from "../../redux/modal/addressModalSlice";
+import { openModal, closeModal, setActiveTab, setCityId, setAreaId, setBranchId } from "../../redux/modal/addressModalSlice";
 import { setProductsData, setProductsLoading } from "../../redux/productsData/productsSlice";
 import { TruckIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { getWebOrderAddress, getProducts } from "../../services/api";
@@ -89,7 +89,10 @@ const AddressModal = () => {
           {/* Tabs */}
           <div className="flex justify-center relative">
             <button className={`py-2 px-1 w-full text-sm font-semibold relative z-10 text-center ${activeTab === "delivery" ? "text-white" : "text-black"}`}
-              onClick={() => dispatch(setActiveTab("delivery"))} // Set activeTab in Redux
+              onClick={() => {
+                dispatch(setActiveTab("delivery"))
+                localStorage.setItem("lastSelectedTab", "delivery")
+              }} // Set activeTab in Redux
             >
               <p className="flex items-center justify-center text-[12px] sm:text-sm">
                 <TruckIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-1" /> Delivery
@@ -98,7 +101,10 @@ const AddressModal = () => {
             <button
               className={`py-2 px-1 w-full text-sm font-semibold relative z-10 ${activeTab === "pickup" ? "text-white" : "text-black"
                 }`}
-              onClick={() => dispatch(setActiveTab("pickup"))} // Set activeTab in Redux
+              onClick={() => {
+                dispatch(setActiveTab("pickup"))
+                localStorage.setItem("lastSelectedTab", "pickup")
+              }} // Set activeTab in Redux
             >
               <p className="flex items-center justify-center text-[12px] sm:text-sm">
                 <ShoppingBagIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-1" /> Pickup
@@ -162,7 +168,7 @@ const AddressModal = () => {
                       onChange={(e) => {
                         dispatch(setAreaId(e));
                         setModalData({ ...modalData, AreaId: e });
-
+                        localStorage.setItem('areaId', e)
                       }}
                       filterOption={(input, option) =>
                         option.children
@@ -228,6 +234,7 @@ const AddressModal = () => {
                       onChange={(e) => {
                         dispatch(setBranchId(e));
                         setModalData({ ...modalData, BranchId: e });
+                        localStorage.setItem('branchId', e)
                       }}
                       filterOption={(input, option) =>
                         option.children
@@ -259,14 +266,6 @@ const AddressModal = () => {
           disabled={isConfirmDisabled}
           onClick={async () => {
             dispatch(closeModal());
-            dispatch(setProductsLoading(true))
-            const response = await getProducts({
-              activeTab,
-              CityId,
-              AreaId,
-              BranchId,
-            });
-
             try {
               dispatch(setProductsLoading(true));
               const response = await getProducts({ activeTab, CityId, AreaId, BranchId });
@@ -284,19 +283,7 @@ const AddressModal = () => {
               dispatch(setProductsLoading(false));
             }
 
-            if (modalData.AreaId) {
-              const area = deliveryPickupData.areas.find(area => area.AreaId === modalData.AreaId);
-              if (area) {
-                dispatch(setAreaName(area.AreaName));
-              }
-            }
-            // Check if BranchId is available and dispatch the branch name
-            if (modalData.BranchId) {
-              const branch = deliveryPickupData.branches.find(branch => branch.BranchId === modalData.BranchId);
-              if (branch) {
-                dispatch(setBranchName(branch.BranchName));
-              }
-            }
+
 
           }}
         >
