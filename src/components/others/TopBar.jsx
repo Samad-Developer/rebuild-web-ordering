@@ -39,7 +39,7 @@ const TopBar = () => {
             </div>
           </div>
           <p className="text-white flex items-center bg-red-500 h-[38px] sm:h-10 px-2.5 sm:px-4 py-[9.5px] sm:py-[11px] rounded-full text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
-            <PhoneIcon className="h-4 w-4 mr-1" />{" "}
+            <PhoneIcon className="h-4 w-4 mr-1 animate-rotate" />{" "}
             <p>03485497976</p>
           </p>
         </div>

@@ -9,6 +9,7 @@ export default {
       animation: {
         pulse: 'pulse 1.5s infinite',
         shake: 'shake 0.5s ease-in-out infinite',
+        rotate: 'rotate 1.5s ease-in-out infinite',
       },
       keyframes: {
         pulse: {
@@ -20,6 +21,13 @@ export default {
           '25%': { transform: 'translateX(-4px)' },
           '50%': { transform: 'translateX(4px)' },
           '75%': { transform: 'translateX(-4px)' },
+        },
+        rotate: {
+          '0%': { transform: 'rotate(0deg)' },
+          '25%': { transform: 'rotate(20deg)' },
+          '50%': { transform: 'rotate(0deg)' },
+          '75%': { transform: 'rotate(-20deg)' },
+          '100%': { transform: 'rotate(0deg)' },
         },
       },
     },

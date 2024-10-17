@@ -9,14 +9,14 @@ import loadingVideo from "../../assets/surprisefood (1).webm";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { Menu } from "antd";
 
 const MainPage = () => {
   const dispatch = useDispatch();
+  const baseURL = import.meta.env.VITE_BASE_URL
   const { activeTab, CityId, AreaId, BranchId } = useSelector((state) => state.addressModal);
   const { productsData, productsLoading } = useSelector((state) => state.productsData);
   const [bannersAndThemeLoading, setBannersAndThemeLoading] = useState(true);
-
 
   useEffect(() => {
 
@@ -76,9 +76,21 @@ const MainPage = () => {
       <TopBar />
       <Banner />
       {productsLoading && (
-        <div className="bg-slate-700 w-full p-6">Loading Products </div>
+        <div className="bg-slate-700 w-full p-6">Skeleton here </div>
       )}
-      <CategoryCard />
+      <div className="p-5 sticky top-0">
+
+      </div>
+
+
+      <div className="p-32 bg-black"></div>
+      <div className="p-32 bg-black"></div>
+      <div className="p-32 bg-black"></div>
+      <div className="p-32 bg-black"></div>
+      <div className="p-32 bg-black"></div>
+      <div className="p-32 bg-black"></div>
+      <div className="p-32 bg-black"></div>
+
 
       {bannersAndThemeLoading ? (
         <div className="flex justify-center items-center h-96">
@@ -95,3 +107,9 @@ const MainPage = () => {
 };
 
 export default MainPage;
+
+
+
+
+
+
