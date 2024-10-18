@@ -9,7 +9,7 @@ const Announcement = () => {
             {false && (
                 <div className="w-full bg-red-500 text-white py-1">
                     <div className="text-center text-[12px] sm:text-sm flex justify-center">
-                        <SpeakerWaveIcon className='w-6 h-6' /> &nbsp;
+                        <SpeakerWaveIcon className='w-6 h-6' /> &nbsp; &nbsp;
                         <p className='flex items-center'>{'Sorry we are close right now and will reopen at 2pm'}</p>
                     </div>
 
