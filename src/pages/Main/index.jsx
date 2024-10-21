@@ -9,7 +9,7 @@ import loadingVideo from "../../assets/surprisefood (1).webm";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Scrollspy from 'react-scrollspy'
+import clsx from "clsx";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -137,6 +137,7 @@ const MainPage = () => {
     getProductsData();
   }, []);
 
+  const categoryLinksStyle = 'default';
 
 
   return (
@@ -150,14 +151,21 @@ const MainPage = () => {
       )}
 
       {/* category navigation link......................................................................................... */}
-      <div className="sticky flex justify-center left-0 top-0 bg-white px-2 sm:px-3 pt-2 sm:py-[10px]">
-        <ul className="flex gap-2">
+      <div className={clsx('sticky flex sm:justify-center px-1 left-0 top-0 bg-red-500 overflow-x-auto custom-scrollbar', {
+        'py-2 sm:py-3' : categoryLinksStyle === 'default',
+        'py-1' : categoryLinksStyle === 'topImage',
+        'py-2 sm:py-1' : categoryLinksStyle === 'leftImage',
+      })}>
+        <ul className={clsx('flex',{
+          'gap-1 sm:gap-3' : categoryLinksStyle === 'default',
+          'gap-2 sm:gap-2' : categoryLinksStyle === 'leftImage',
+        })}>
           {productsData && productsData.Table1 && productsData.Table1.length > 0 && (
             productsData.Table1.map((category) => (
               <li key={category.CategoryId} className="">
                 <CategoryCard
                   category={category}
-                  designLayout="leftImage" // 'default', 'topImage', 'leftImage'
+                  designLayout={categoryLinksStyle} // 'default', 'topImage', 'leftImage'
                   activeSection={activeSection}
                   handleLinkClick={handleLinkClick}
                 />

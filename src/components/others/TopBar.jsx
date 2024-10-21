@@ -38,7 +38,7 @@ const TopBar = () => {
               </p>
             </div>
           </div>
-          <p className="text-white flex items-center bg-red-500 h-[38px] sm:h-10 px-2.5 sm:px-4 py-[9.5px] sm:py-[11px] rounded-full text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
+          <p className="text-red-500 flex items-center bg-red-50 h-[38px] sm:h-10 px-2.5 sm:px-4 py-[9.5px] sm:py-[11px] rounded-full text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
             <PhoneIcon className="h-4 w-4 mr-1 animate-rotate" />{" "}
             <p>03485497976</p>
           </p>
@@ -53,11 +53,11 @@ const TopBar = () => {
           </div>
         )}
 
-        <div className="flex relative items-center ml-2 cursor-pointer rounded-full border border-gray-300 px-1.5 py-1.5 sm:px-2 sm:py-2">          
+        <div className="flex relative items-center ml-2 cursor-pointer rounded-full bg-red-500 px-1.5 py-1.5 sm:px-2 sm:py-2">          
           <span className="text-white absolute left-7 bottom-6 bg-red-500 rounded-full border border-white px-1.5  text-sm font-bold ">
             {"8"}
           </span>
-          <ShoppingBagIcon className="text-red-500 w-7 sm:w-6 text-[2rem] align-middle" />
+          <ShoppingBagIcon className="text-white w-7 sm:w-6 text-[2rem] align-middle" />
         </div>
       </div>
     </>
