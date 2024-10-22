@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { setProductsData, setProductsLoading } from "../../redux/productsData/productsSlice";
 import { toggleModal, openModal, closeModal } from "../../redux/modal/addressModalSlice";
-import { AddressModal, Announcement, TopBar, Banner, CategoryCard, Search } from "../../components";
+import { AddressModal, Announcement, TopBar, Banner, CategoryCard, Search, PopularItemCard } from "../../components";
 import { getWebOrderingSettings, getProducts } from "../../services/api";
 import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
 import { setTheme } from "../../redux/themeSettings/themeSlice";
@@ -32,10 +32,10 @@ const MainPage = () => {
   }
   // Filter the data based on the search term
   const filteredData = searchTerm
-  ? productsData?.Table2.filter(product =>
+    ? productsData?.Table2.filter(product =>
       product.ProductName.toLowerCase().includes(searchTerm.toLowerCase())
     )
-  : productsData;
+    : productsData;
 
   // for category navigation ---------------------------------------------------------------------------------------------------------
   useEffect(() => {
@@ -50,7 +50,7 @@ const MainPage = () => {
         }
       },
       {
-        threshold: 0.7, 
+        threshold: 0.7,
       }
     );
     // sections.forEach((section) => {
@@ -66,15 +66,15 @@ const MainPage = () => {
   }, [isManualScroll]);
 
   const handleLinkClick = (sectionId) => {
-    setIsManualScroll(true); 
+    setIsManualScroll(true);
     document.getElementById(sectionId).scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
-    setActiveSection(sectionId); 
+    setActiveSection(sectionId);
     setTimeout(() => {
       setIsManualScroll(false);
-    }, 800); 
+    }, 800);
   };
   // for category navigation ---------------------------------------------------------------------------------------------------------
 
@@ -130,10 +130,10 @@ const MainPage = () => {
   }, []);
 
   const categoryLinksStyle = 'default';
- 
+
 
   return (
-    <div className="overflow-hidden">
+    <div className="">
       <ToastContainer position="top-center" autoClose={3000} />
       <Announcement />
       <TopBar />
@@ -146,9 +146,9 @@ const MainPage = () => {
 
       {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
       <div className={clsx('sticky flex sm:justify-center px-1 left-0 top-0 bg-red-500 overflow-x-auto custom-scrollbar z-10', {
-        'py-2 sm:py-2': categoryLinksStyle === 'default',
+        'py-[8px] ': categoryLinksStyle === 'default',
         'py-1': categoryLinksStyle === 'topImage',
-        'py-2 sm:py-1': categoryLinksStyle === 'leftImage',
+        'py-2 ': categoryLinksStyle === 'leftImage',
       })}>
         <ul className={clsx('flex', {
           'gap-1 sm:gap-3': categoryLinksStyle === 'default',
@@ -171,7 +171,7 @@ const MainPage = () => {
       {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
 
       {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
-      <div className="py-5 sm:py-10 bg-white flex items-center justify-center">
+      <div className="pt-10 bg-white flex items-center justify-center">
         <Search
           searchTerm={searchTerm}
           onSearch={handleSearch}
@@ -180,9 +180,15 @@ const MainPage = () => {
       </div>
       {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
 
-      
+      {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
+          <div className="w-full flex flex-col items-center justify-center py-10">
+          <PopularItemCard />
+          </div>
+      {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
 
-
+      <div className="h-screen w-full bg-black"></div>
+      <div className="h-screen w-full bg-green-600"></div>
+      <div className="h-screen w-full"></div>
 
 
 

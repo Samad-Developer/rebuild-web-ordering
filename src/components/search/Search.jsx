@@ -14,7 +14,7 @@ const Search = ({ searchTerm, onSearch, filteredData }) => {
                     </div>
                 }
                 placeholder="Search for delicious dishes..."
-                className="w-full pl-4 pr-1 py-1 text-lg rounded-full placeholder-gray-800 shadow-custom"
+                className="w-full pl-4 pr-1 py-[3px] sm:py-1 text-lg rounded-full placeholder-gray-800 shadow-custom"
             />
         </div>
 

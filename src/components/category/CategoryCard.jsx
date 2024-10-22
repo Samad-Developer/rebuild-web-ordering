@@ -11,7 +11,7 @@ const CategoryCard = ({ category, designLayout, activeSection, handleLinkClick }
       case 'topImage':
         return (
           <div
-            className={`flex flex-col items-center px-3 py-2 text-[14px] sm:text-[15px] whitespace-nowrap hover:bg-white hover:text-red-500 rounded-lg 
+            className={`flex flex-col items-center px-3 py-2 text-[12px] sm:text-[15px] whitespace-nowrap hover:bg-white hover:text-red-500 rounded-lg 
               ${activeSection === categoryObject.CategoryId ? 'bg-blue-500 text-white' : 'text-white'}`}
           >
             <img
@@ -25,7 +25,7 @@ const CategoryCard = ({ category, designLayout, activeSection, handleLinkClick }
       case 'leftImage':
         return (
           <div
-            className={`flex items-center text-[14px] sm:text-[15px] min-w-max whitespace-nowrap hover:bg-white hover:text-red-500  px-2 sm:px-2 py-2 sm:py-2 rounded-xl 
+            className={`flex items-center text-[12px] sm:text-[15px] min-w-max whitespace-nowrap hover:bg-white hover:text-red-500  pl-1 pr-2 sm:pl-1 sm:pr-2 py-1 sm:py-1 rounded-full 
               ${activeSection === categoryObject.CategoryId ? 'bg-blue-500 text-white' : 'text-white'}`}
           >
             <img
@@ -39,7 +39,7 @@ const CategoryCard = ({ category, designLayout, activeSection, handleLinkClick }
       default:
         return (
           <div
-            className={`text-[14px] sm:text-[15px] py-2 px-4 rounded-full font-semibold whitespace-nowrap hover:bg-white hover:text-black
+            className={`text-[12px] sm:text-[15px] py-2 px-4 rounded-full font-semibold whitespace-nowrap hover:bg-white hover:text-black
             ${activeSection === categoryObject.CategoryId ? 'bg-blue-500 text-white' : 'text-white'}`}
             >
             {categoryObject.CategoryName.toUpperCase()}
