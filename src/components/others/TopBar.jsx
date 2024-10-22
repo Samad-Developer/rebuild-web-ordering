@@ -18,7 +18,7 @@ const TopBar = () => {
 
   return (
     <>
-      <div className="flex justify-end items-center sm:justify-between px-3 sm:px-5 py-2 sm:py-3 relative">
+      <div className="flex justify-end items-center sm:justify-between px-3 sm:px-5 py-2 sm:py-3 relative bg-white">
         <div className="flex gap-1 sm:gap-2">
           <div className="flex h-[38px] sm:h-10 gap-1 text-white bg-red-500 px-2  sm:px-3 rounded-full transition-transform duration-200 hover:scale-105">
             <div className="flex items-center">

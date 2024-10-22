@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { setProductsData, setProductsLoading } from "../../redux/productsData/productsSlice";
 import { toggleModal, openModal, closeModal } from "../../redux/modal/addressModalSlice";
-import { AddressModal, Announcement, TopBar, Banner, CategoryCard } from "../../components";
+import { AddressModal, Announcement, TopBar, Banner, CategoryCard, Search } from "../../components";
 import { getWebOrderingSettings, getProducts } from "../../services/api";
 import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
 import { setTheme } from "../../redux/themeSettings/themeSlice";
@@ -23,19 +23,22 @@ const MainPage = () => {
   const { activeTab, CityId, AreaId, BranchId } = useSelector((state) => state.addressModal);
   const { productsData, productsLoading } = useSelector((state) => state.productsData);
   const [bannersAndThemeLoading, setBannersAndThemeLoading] = useState(true);
-  console.log('checking category data ', productsData)
-  // for category navigation ..........................................................................................
-  const sections = [
-    { id: 'section-1', name: 'Section 1', content: 'Content for section 1' },
-    { id: 'section-2', name: 'Section 2', content: 'Content for section 2' },
-    { id: 'section-3', name: 'Section 3', content: 'Content for section 3' },
-    { id: 'section-4', name: 'Section 4', content: 'Content for section 3' },
-    { id: 'section-5', name: 'Section 5', content: 'Content for section 3' },
-    { id: 'section-6', name: 'Section 6', content: 'Content for section 3' },
-    { id: 'section-7', name: 'Section 7', content: 'Content for section 3' },
-  ];
+  // console.log('checking category data ', productsData)
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    console.log('checking the filtered data ', filteredData)
+  }
+  // Filter the data based on the search term
+  const filteredData = searchTerm
+  ? productsData?.Table2.filter(product =>
+      product.ProductName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  : productsData;
+
+  // for category navigation ---------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    // Create an IntersectionObserver to track sections
     const observer = new IntersectionObserver(
       (entries) => {
         if (!isManualScroll) {
@@ -47,44 +50,33 @@ const MainPage = () => {
         }
       },
       {
-        threshold: 0.7, // Trigger when 70% of the section is in view
+        threshold: 0.7, 
       }
     );
-
-    // Observe all sections
-    sections.forEach((section) => {
-      const sectionElement = document.getElementById(section.id);
-      if (sectionElement) {
-        observer.observe(sectionElement);
-      }
-    });
+    // sections.forEach((section) => {
+    //   const sectionElement = document.getElementById(section.id);
+    //   if (sectionElement) {
+    //     observer.observe(sectionElement);
+    //   }
+    // });
 
     return () => {
-      // Clean up the observer on component unmount
       observer.disconnect();
     };
-  }, [sections, isManualScroll]);
+  }, [isManualScroll]);
 
-  // Handle link click to manually set active section and smooth scroll
   const handleLinkClick = (sectionId) => {
-    console.log('react here baby dont worry ', sectionId)
-    setIsManualScroll(true); // Disable observer updates during manual scroll
-
-    // Smooth scroll to the target section
+    setIsManualScroll(true); 
     document.getElementById(sectionId).scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
-
-    setActiveSection(sectionId); // Set the clicked section as active immediately
-
-    // Re-enable observer after the scroll finishes (based on scroll duration)
+    setActiveSection(sectionId); 
     setTimeout(() => {
       setIsManualScroll(false);
-    }, 800); // Adjust this duration based on scroll animation duration
+    }, 800); 
   };
-  // for category navigation .............................................................................................
-
+  // for category navigation ---------------------------------------------------------------------------------------------------------
 
   useEffect(() => {
 
@@ -138,27 +130,29 @@ const MainPage = () => {
   }, []);
 
   const categoryLinksStyle = 'default';
-
+ 
 
   return (
-    <div className="">
+    <div className="overflow-hidden">
       <ToastContainer position="top-center" autoClose={3000} />
       <Announcement />
       <TopBar />
       <Banner />
+
+      {/* this have to remove from here the either the skeleton or the complete page  */}
       {productsLoading && (
         <div className="bg-slate-700 w-full p-6">Skeleton here </div>
       )}
 
-      {/* category navigation link......................................................................................... */}
-      <div className={clsx('sticky flex sm:justify-center px-1 left-0 top-0 bg-red-500 overflow-x-auto custom-scrollbar', {
-        'py-2 sm:py-3' : categoryLinksStyle === 'default',
-        'py-1' : categoryLinksStyle === 'topImage',
-        'py-2 sm:py-1' : categoryLinksStyle === 'leftImage',
+      {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
+      <div className={clsx('sticky flex sm:justify-center px-1 left-0 top-0 bg-red-500 overflow-x-auto custom-scrollbar z-10', {
+        'py-2 sm:py-2': categoryLinksStyle === 'default',
+        'py-1': categoryLinksStyle === 'topImage',
+        'py-2 sm:py-1': categoryLinksStyle === 'leftImage',
       })}>
-        <ul className={clsx('flex',{
-          'gap-1 sm:gap-3' : categoryLinksStyle === 'default',
-          'gap-2 sm:gap-2' : categoryLinksStyle === 'leftImage',
+        <ul className={clsx('flex', {
+          'gap-1 sm:gap-3': categoryLinksStyle === 'default',
+          'gap-2 sm:gap-2': categoryLinksStyle === 'leftImage',
         })}>
           {productsData && productsData.Table1 && productsData.Table1.length > 0 && (
             productsData.Table1.map((category) => (
@@ -174,21 +168,21 @@ const MainPage = () => {
           )}
         </ul>
       </div>
-      {/* category navigation link......................................................................................... */}
+      {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
 
-      {/* Content */}
-      <div className="px-1 space-y-32">
-        {sections.map((section) => (
-          <section
-            key={section.id}
-            id={section.id}
-            className="min-h-screen p-4 bg-gray-200"
-          >
-            <h2 className="text-3xl font-bold">{section.name}</h2>
-            <p>{section.content}</p>
-          </section>
-        ))}
+      {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
+      <div className="py-5 sm:py-10 bg-white flex items-center justify-center">
+        <Search
+          searchTerm={searchTerm}
+          onSearch={handleSearch}
+          filteredData={filteredData}
+        />
       </div>
+      {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
+
+      
+
+
 
 
 

@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        'custom': 'rgba(0, 0, 0, 0.1) 0px 4px 10px',
+      },
       animation: {
         pulse: 'pulse 1.5s infinite',
         shake: 'shake 0.5s ease-in-out infinite',

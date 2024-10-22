@@ -1,9 +1,40 @@
-
 .ant-modal .ant-modal-content {
   border-radius: 16px;
-  /* border: 10px solid black; */
 }
 
 .ant-modal .ant-modal-close {
   display: none;
 }
+
+.ant-input-affix-wrapper {
+  padding: 0;
+}
+
+.ant-input-outlined:focus-within {
+  outline: none; 
+  box-shadow: none;
+  border-color: rgb(255, 0, 0); 
+}
+
+.ant-input-outlined:hover {
+  border-color: rgb(255, 0, 0);
+}
+
+.ant-input::placeholder {
+  font-size: 17px;
+}
+
+/* Small screens */
+@media (max-width: 768px) {
+  .ant-input::placeholder {
+    font-size: 14px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .ant-input::placeholder {
+    font-size: 14px;
+  }
+}
+
