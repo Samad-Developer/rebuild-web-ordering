@@ -72,6 +72,7 @@ const baseURL = import.meta.env.VITE_BASE_URL;
 
 const PopularItemCard = () => {
     const { popularItems, productsData } = useSelector((state) => state.productsData);
+    console.log('checking popular items ', popularItems)
 
     return (
         // the popular items card look so bad becase its too big now we need to make it responsive and smaller to look good and not to take the complete
