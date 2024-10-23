@@ -22,9 +22,11 @@ const productsSlice = createSlice({
     clearProductsData: (state) => {
       state.productsData = []; // Clear the products data
     },
+    // set popular items
     setPopularItems: (state, action) => {
       state.popularItems = action.payload; // Set the popular items
     },
+    
   },
 });
 
