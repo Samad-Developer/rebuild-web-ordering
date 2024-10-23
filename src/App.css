@@ -15,6 +15,11 @@
   box-shadow: none;
   border-color: rgb(255, 0, 0); 
 }
+.ant-input-outlined {
+  outline: none; 
+  box-shadow: none;
+  border-color: rgb(255, 0, 0); 
+}
 
 .ant-input-outlined:hover {
   border-color: rgb(255, 0, 0);
@@ -38,3 +43,7 @@
   }
 }
 
+.popular-items-swiper .swiper-button-next,
+.popular-items-swiper .swiper-button-prev {
+    color: 'white'; /* Replace 'yourColor' with the desired color (e.g., 'white', '#ff0000') */
+}

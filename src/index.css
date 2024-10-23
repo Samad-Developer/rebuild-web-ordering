@@ -9,6 +9,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   scroll-behavior: smooth;
+  /* i want my font poppin 600 */
+  font-family: 'Poppins', sans-serif;
 }
 
 .custom-scrollbar::-webkit-scrollbar {

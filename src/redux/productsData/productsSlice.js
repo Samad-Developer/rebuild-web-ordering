@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   productsData: [], // Holds the products data
   productsLoading: false,   // Manages loading state
+  popularItems: [],
 };
 
 const productsSlice = createSlice({
@@ -21,11 +22,14 @@ const productsSlice = createSlice({
     clearProductsData: (state) => {
       state.productsData = []; // Clear the products data
     },
+    setPopularItems: (state, action) => {
+      state.popularItems = action.payload; // Set the popular items
+    },
   },
 });
 
 // Export actions to use in components
-export const { setProductsData, setProductsLoading, clearProductsData } = productsSlice.actions;
+export const { setProductsData, setProductsLoading, clearProductsData, setPopularItems } = productsSlice.actions;
 
 // Export the reducer to add to the store
 export default productsSlice.reducer;

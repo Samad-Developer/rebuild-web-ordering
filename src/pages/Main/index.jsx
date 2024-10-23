@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { setProductsData, setProductsLoading } from "../../redux/productsData/productsSlice";
+import { setProductsData, setProductsLoading, setPopularItems } from "../../redux/productsData/productsSlice";
 import { toggleModal, openModal, closeModal } from "../../redux/modal/addressModalSlice";
 import { AddressModal, Announcement, TopBar, Banner, CategoryCard, Search, PopularItemCard } from "../../components";
 import { getWebOrderingSettings, getProducts } from "../../services/api";
@@ -23,7 +23,7 @@ const MainPage = () => {
   const { activeTab, CityId, AreaId, BranchId } = useSelector((state) => state.addressModal);
   const { productsData, productsLoading } = useSelector((state) => state.productsData);
   const [bannersAndThemeLoading, setBannersAndThemeLoading] = useState(true);
-  // console.log('checking category data ', productsData)
+  console.log('checking category data ', productsData)
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (term) => {
@@ -105,6 +105,9 @@ const MainPage = () => {
         const response = await getProducts({ activeTab, CityId, AreaId, BranchId });
         if (!response?.DataSet.Table[0]?.Error_Message) {
           dispatch(setProductsData(response?.DataSet));
+          // insde response.dataset there is Table which contain object now filter it based on ispromotion
+          const popularItems = response?.DataSet.Table.filter((item) => item.IsPromotion === true);
+          dispatch(setPopularItems(popularItems));
         } else {
           toast.error(response?.DataSet.Table[0]?.Error_Message);
           dispatch(openModal());
@@ -171,7 +174,7 @@ const MainPage = () => {
       {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
 
       {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
-      <div className="pt-10 bg-white flex items-center justify-center">
+      <div className="pt-7 sm:pt-10 bg-white flex items-center justify-center">
         <Search
           searchTerm={searchTerm}
           onSearch={handleSearch}
@@ -181,11 +184,20 @@ const MainPage = () => {
       {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
 
       {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
-          <div className="w-full flex flex-col items-center justify-center py-10">
+          <div className="w-full flex items-center justify-center py-8 sm:py-10">
           <PopularItemCard />
           </div>
       {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
 
+      {/* Category wise items here --------------------------------------------------------------------------------------------------------------------------------------- */}
+      <div className="w-full flex flex-col items-center justify-center py-8 sm:py-10">
+        {
+          
+        }
+      </div>
+      {/* Category wise items here --------------------------------------------------------------------------------------------------------------------------------------- */}
+      
+      
       <div className="h-screen w-full bg-black"></div>
       <div className="h-screen w-full bg-green-600"></div>
       <div className="h-screen w-full"></div>

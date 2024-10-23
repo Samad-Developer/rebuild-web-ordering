@@ -20,7 +20,7 @@ const TopBar = () => {
     <>
       <div className="flex justify-end items-center sm:justify-between px-3 sm:px-5 py-2 sm:py-3 relative bg-white">
         <div className="flex gap-1 sm:gap-2">
-          <div className="flex h-[38px] sm:h-10 gap-1 text-white bg-red-500 px-2  sm:px-3 rounded-full transition-transform duration-200 hover:scale-105">
+          <div className="flex h-[38px] sm:h-10 gap-1 text-white bg-red-500 px-2  rounded-md transition-transform duration-200 hover:scale-105">
             <div className="flex items-center">
               <MapPinIcon className="w-5 h-5 " />
             </div>
@@ -38,8 +38,8 @@ const TopBar = () => {
               </p>
             </div>
           </div>
-          <p className="text-red-500 flex items-center bg-red-50 h-[38px] sm:h-10 px-2.5 sm:px-4 py-[9.5px] sm:py-[11px] rounded-full text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
-            <PhoneIcon className="h-4 w-4 mr-1 animate-rotate" />{" "}
+          <p className="text-white flex items-center bg-red-500 h-[38px] sm:h-10 px-2.5 sm:px-4 py-[9.5px] sm:py-[11px] rounded-md text-[0.65rem] sm:text-[12px] transition-transform duration-200 hover:scale-105">
+            <PhoneIcon className="h-4 w-4 mr-1" />{" "}
             <p>03485497976</p>
           </p>
         </div>
