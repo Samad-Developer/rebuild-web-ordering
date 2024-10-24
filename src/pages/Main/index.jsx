@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { setProductsData, setProductsLoading, setPopularItems } from "../../redux/productsData/productsSlice";
 import { toggleModal, openModal, closeModal } from "../../redux/modal/addressModalSlice";
-import { AddressModal, Announcement, TopBar, Banner, CategoryCard, Search, PopularItemCard, Skeleton } from "../../components";
+import { AddressModal, Announcement, TopBar, Banner, CategoryCard, Search, PopularItemCard, Skeleton, ItemCard } from "../../components";
 import { getWebOrderingSettings, getProducts } from "../../services/api";
 import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
 import { setTheme } from "../../redux/themeSettings/themeSlice";
@@ -9,6 +9,7 @@ import loadingVideo from "../../assets/surprisefood (1).webm";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Row, Col } from "antd";
 import clsx from "clsx";
 
 const MainPage = () => {
@@ -184,13 +185,26 @@ const MainPage = () => {
             {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
 
             {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
-            <div className="w-full flex items-center justify-center pt-8 sm:pt-12">
+            <div className="w-full px-2 sm:px-8 mx-auto md:px-16 lg:px-24 xl:px-[10rem] mt-6 sm:mt-12">
               <PopularItemCard />
             </div>
             {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
 
             {/* Category wise items here --------------------------------------------------------------------------------------------------------------------------------------- */}
-            <div className="w-full flex flex-col items-center justify-center pt-8 sm:pt-12 pb-40">
+            <div className="mx-auto max-w-2xl px-2 sm:px-6 lg:px-8 lg:max-w-[78rem] mt-6 sm:mt-12">
+              {productsData && productsData?.Table1?.map((category) => (
+                // show the category name if avaiable if not than show the category name center aligned
+                <div className="mb-4 flex justify-center">
+                  {
+                    category?.CategoryImage ? (
+                      // show responsvive banner image here which is category image and have a responsve hieght and width the hieght need to be shown like banner not bigger
+                      category?.CategoryImage && <img src={`${baseURL}${category.CategoryImage}`} alt={category.CategoryName} className="h-auto w-full overflow-hidden rounded-lg  sm:rounded-2xl" />
+                    ) : (
+                      <h2 className="text-2xl font-medium tracking-tight text-gray-900">{category.CategoryName}</h2>
+                    )
+                  }
+                </div>  
+              ))}
             </div>
             {/* Category wise items here --------------------------------------------------------------------------------------------------------------------------------------- */}
 
