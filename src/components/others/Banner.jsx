@@ -26,11 +26,15 @@ const Banner = () => {
       >
         {banners?.map((banner, index) => (
           <SwiperSlide key={index} className="w-full">
-            <img
-              src={baseURL + banner}
-              alt={`Banner ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
+            {
+              banner && (
+                <img
+                  src={baseURL + banner}
+                  alt={`Banner ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              )
+            }
           </SwiperSlide>
         ))}
       </Swiper>

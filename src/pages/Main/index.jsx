@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { setProductsData, setProductsLoading, setPopularItems } from "../../redux/productsData/productsSlice";
 import { toggleModal, openModal, closeModal } from "../../redux/modal/addressModalSlice";
-import { AddressModal, Announcement, TopBar, Banner, CategoryCard, Search, PopularItemCard } from "../../components";
+import { AddressModal, Announcement, TopBar, Banner, CategoryCard, Search, PopularItemCard, Skeleton } from "../../components";
 import { getWebOrderingSettings, getProducts } from "../../services/api";
 import { getThemeAndSetIntoRedux } from "../../utils/themeHandler";
 import { setTheme } from "../../redux/themeSettings/themeSlice";
@@ -137,84 +137,70 @@ const MainPage = () => {
 
   return (
     <div className="">
-      <ToastContainer position="top-center" autoClose={3000} />
-      <Announcement />
-      <TopBar />
-      <Banner />
+      {
+        productsLoading ? (
+          <Skeleton />
+        ) :
+          <>
+            <ToastContainer position="top-center" autoClose={3000} />
+            <Announcement />
+            <TopBar />
+            <Banner />
 
-      {/* this have to remove from here the either the skeleton or the complete page  */}
-      {productsLoading && (
-        <div className="bg-slate-700 w-full p-6">Skeleton here </div>
-      )}
+            {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
+            <div className={clsx('sticky flex sm:justify-center px-1 left-0 top-0 bg-red-500 overflow-x-auto custom-scrollbar z-10', {
+              'py-[8px] ': categoryLinksStyle === 'default',
+              'py-1': categoryLinksStyle === 'topImage',
+              'py-2 ': categoryLinksStyle === 'leftImage',
+            })}>
+              <ul className={clsx('flex', {
+                'gap-1 sm:gap-3': categoryLinksStyle === 'default',
+                'gap-2 sm:gap-2': categoryLinksStyle === 'leftImage',
+              })}>
+                {productsData && productsData.Table1 && productsData.Table1.length > 0 && (
+                  productsData.Table1.map((category) => (
+                    <li key={category.CategoryId} className="">
+                      <CategoryCard
+                        category={category}
+                        designLayout={categoryLinksStyle} // 'default', 'topImage', 'leftImage'
+                        activeSection={activeSection}
+                        handleLinkClick={handleLinkClick}
+                      />
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+            {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
 
-      {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
-      <div className={clsx('sticky flex sm:justify-center px-1 left-0 top-0 bg-red-500 overflow-x-auto custom-scrollbar z-10', {
-        'py-[8px] ': categoryLinksStyle === 'default',
-        'py-1': categoryLinksStyle === 'topImage',
-        'py-2 ': categoryLinksStyle === 'leftImage',
-      })}>
-        <ul className={clsx('flex', {
-          'gap-1 sm:gap-3': categoryLinksStyle === 'default',
-          'gap-2 sm:gap-2': categoryLinksStyle === 'leftImage',
-        })}>
-          {productsData && productsData.Table1 && productsData.Table1.length > 0 && (
-            productsData.Table1.map((category) => (
-              <li key={category.CategoryId} className="">
-                <CategoryCard
-                  category={category}
-                  designLayout={categoryLinksStyle} // 'default', 'topImage', 'leftImage'
-                  activeSection={activeSection}
-                  handleLinkClick={handleLinkClick}
-                />
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-      {/* category navigation link--------------------------------------------------------------------------------------------------------------------------------- */}
+            {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
+            <div className="pt-5 sm:pt-10 bg-white flex items-center justify-center">
+              <Search
+                searchTerm={searchTerm}
+                onSearch={handleSearch}
+                filteredData={filteredData}
+              />
+            </div>
+            {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
 
-      {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
-      <div className="pt-7 sm:pt-10 bg-white flex items-center justify-center">
-        <Search
-          searchTerm={searchTerm}
-          onSearch={handleSearch}
-          filteredData={filteredData}
-        />
-      </div>
-      {/* searching input box here--------------------------------------------------------------------------------------------------------------------------------- */}
+            {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
+            <div className="w-full flex items-center justify-center pt-8 sm:pt-12">
+              <PopularItemCard />
+            </div>
+            {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
 
-      {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
-          <div className="w-full flex items-center justify-center py-8 sm:py-10">
-          <PopularItemCard />
-          </div>
-      {/* popular items here --------------------------------------------------------------------------------------------------------------------------------------- */}
-
-      {/* Category wise items here --------------------------------------------------------------------------------------------------------------------------------------- */}
-      <div className="w-full flex flex-col items-center justify-center py-8 sm:py-10">
-        {
-          
-        }
-      </div>
-      {/* Category wise items here --------------------------------------------------------------------------------------------------------------------------------------- */}
-      
-      
-      <div className="h-screen w-full bg-black"></div>
-      <div className="h-screen w-full bg-green-600"></div>
-      <div className="h-screen w-full"></div>
+            {/* Category wise items here --------------------------------------------------------------------------------------------------------------------------------------- */}
+            <div className="w-full flex flex-col items-center justify-center pt-8 sm:pt-12 pb-40">
+            </div>
+            {/* Category wise items here --------------------------------------------------------------------------------------------------------------------------------------- */}
 
 
-
-
-      {bannersAndThemeLoading ? (
-        <div className="flex justify-center items-center h-96">
-          <video autoPlay loop muted className="w-36 h-36 z-50">
-            <source src={loadingVideo} type="video/webm" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      ) : (
-        <AddressModal />
-      )}
+            <div className="h-screen w-full bg-black"></div>
+            <div className="h-screen w-full bg-green-600"></div>
+            <div className="h-screen w-full"></div>
+            <AddressModal />
+          </>
+      }
     </div>
   );
 };

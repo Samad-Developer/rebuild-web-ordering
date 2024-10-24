@@ -39,7 +39,7 @@ const CategoryCard = ({ category, designLayout, activeSection, handleLinkClick }
       default:
         return (
           <div
-            className={`text-[12px] sm:text-[15px] py-[10px] px-4 rounded-md font-semibold whitespace-nowrap hover:bg-white hover:text-black
+            className={`text-[12px] sm:text-[15px] py-[10px] px-4 rounded-md font-normal whitespace-nowrap hover:bg-white hover:text-black
             ${activeSection === categoryObject.CategoryId ? 'bg-blue-500 text-white' : 'text-white'}`}
             >
             {categoryObject.CategoryName.toUpperCase()}

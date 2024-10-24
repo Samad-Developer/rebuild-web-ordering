@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { openModal, closeModal, setActiveTab, setCityId, setAreaId, setBranchId } from "../../redux/modal/addressModalSlice";
-import { setProductsData, setProductsLoading } from "../../redux/productsData/productsSlice";
+import { setProductsData, setProductsLoading, setPopularItems } from "../../redux/productsData/productsSlice";
 import { TruckIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { getWebOrderAddress, getProducts } from "../../services/api";
 import { useSelector, useDispatch } from "react-redux";
@@ -272,6 +272,8 @@ const AddressModal = () => {
 
               if (!response?.DataSet.Table[0]?.Error_Message) {
                 dispatch(setProductsData(response?.DataSet));
+                const popularItems = response?.DataSet.Table.filter((item) => item.IsPromotion === true);
+                dispatch(setPopularItems(popularItems));
               } else {
                 toast.error(response?.DataSet.Table[0]?.Error_Message);
                 dispatch(openModal())
